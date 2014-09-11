@@ -5,12 +5,12 @@
 
 // Class to describe the spring joint (displayed as a line)
 
-class Spring {
+class Spring2 {
 
   // This is the box2d object we need to create
   MouseJoint mouseJoint;
 
-  Spring() {
+  Spring2() {
     // At first it doesn't exist
     mouseJoint = null;
   }
@@ -45,27 +45,22 @@ class Spring {
   // This is the key function where
   // we attach the spring to an x,y location
   // and the Box object's location
-  //void bind(float x, float y, Barre myBarre) {
-  void bind(float x, float y, Box myBarre) {
+  void bind(float x, float y, Box box) {
     // Define the joint
     MouseJointDef md = new MouseJointDef();
     
     // Body A is just a fake ground body for simplicity (there isn't anything at the mouse)
     md.bodyA = monMonde2d.getGroundBody();
     // Body 2 is the box's boxy
-    // CORRECTION
-    // Ton body à toi, dans ta classe barre, il s'appelle b, pas body ! c'est tout!
-    md.bodyB = myBarre.body;
+    md.bodyB = box.body;
     // Get the mouse location in world coordinates
     Vec2 mp = monMonde2d.coordPixelsToWorld(x,y);
     // And that's the target
     md.target.set(mp);
     // Some stuff about how strong and bouncy the spring should be
-    // CORRECTION
-    // Pareil là
-    md.maxForce = 1000.0f * myBarre.body.m_mass;
+    md.maxForce = 1000.0f * box.body.m_mass;
     md.frequencyHz = 5.0f;
-    md.dampingRatio = 0.1f;
+    md.dampingRatio = 0.000001f;
 
     // Wake up body!
     //box.body.wakeUp();

@@ -11,13 +11,17 @@ import SimpleOpenNI.*;
 
 // A reference to our box2d world
 Box2DProcessing monMonde2d;
-Barre myBarre;
+//Barre myBarre;
+Box myBarre;
 Ballon myBallon;
 Spring mySpring;
 ArrayList<Boundary> myBoundary;
 ArrayList<Window> myWindow;
 
+// ON/OFF pour Kinect // Debug
+boolean debug = true;
 
+Spring2 spring2;
 
 SimpleOpenNI  context;
 color[]       userClr = new color[] { 
@@ -37,12 +41,16 @@ int          userVecListSize = 30;
 // détecté par la kinect
 String       lastGesture = "";
 
+PrismaticJoint m_joint3;
+
 
 void setup() {
   size(1024, 768);
   smooth();
 
-
+  if (debug == false)
+  {
+  
   context = new SimpleOpenNI(this);// initialize SimpleOpenNI object
 
   //Le Kinect
@@ -63,10 +71,10 @@ void setup() {
   context.enableDepth();
   // enable skeleton generation for all joints
   context.enableUser();
-
+  
+  }
+  
   background(0);
-
-  stroke(0);
   strokeWeight(3);
   smooth();  
 
@@ -79,10 +87,16 @@ void setup() {
 
 
   myBallon = new Ballon();
-  myBarre = new Barre(width/2, 760, 40, 10);
+  //myBarre = new Barre(width/2, 760, 100, 10);
+  myBarre = new Box(width/2, 760);
+
   mySpring = new Spring();
 
   mySpring.bind(width/2, 760, myBarre);
+  
+ // spring2 = new Spring2();
+  //spring2.bind(width/2,height/2,myBarre);
+  
   //create arraylist of windows
   myWindow = new ArrayList<Window>();
   myWindow.add(new Window(140, 140, 115, 115));
@@ -95,13 +109,29 @@ void setup() {
   myBoundary.add(new Boundary(width/2, 0, 1024, 10));
   myBoundary.add(new Boundary(width, height/2, 10, height));
   myBoundary.add(new Boundary(0, height/2, 10, height));
+  
+  PrismaticJointDef pjd = new PrismaticJointDef();
+  Boundary myBoundaryTest = new Boundary(0, 760, 5, 5);
+  
+  pjd.initialize(myBoundaryTest.getBody(), myBarre.getBody(), new Vec2(0.0f, 0.0f), new Vec2(1.0f, 0.0f));
+  
+  
+  m_joint3 = (PrismaticJoint) monMonde2d.createJoint(pjd);
+
+
+  
 }  
 
 
 void draw() {
   background(0);
   // update the cam
+  if (debug == false)
+  {
   context.update();
+  }
+  
+  
   monMonde2d.step();
   
 
@@ -118,7 +148,9 @@ void draw() {
 
 
 
-
+  if (debug == false)
+  {
+  
   // draw depthImageMap
   //image(context.depthImage(),0,0);
   //image(context.userImage(),0,0);
@@ -156,6 +188,22 @@ void draw() {
         text(Integer.toString(userList[i]), com2d.x, com2d.y);
       }
     }
+  }
+  
+  if (debug == false)
+  {
+    mySpring.update((int)com2d.x, 760);
+  } else 
+  {
+    mySpring.update((int)mouseX, 760);
+    //mySpring.display();
+  }
+  
+ 
+  
+  myBarre.display();
+  myBallon.display();
+  
 }
 
 
@@ -193,9 +241,7 @@ void drawSkeleton(int userId)
   context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_HIP, SimpleOpenNI.SKEL_RIGHT_KNEE);
   context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE, SimpleOpenNI.SKEL_RIGHT_FOOT); 
 
-  mySpring.update((int)com2d.x, 760);
-  myBarre.display();
-  myBallon.display();
+
 }
 
 

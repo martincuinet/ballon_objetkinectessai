@@ -1,4 +1,9 @@
 class Ballon {
+  
+  // PARAMETRES DU BALLON
+  float densite = 0.3;
+  float friction = 0.00;
+  float restitution = 1;
 
   Body body;
   color c;
@@ -49,18 +54,17 @@ class Ballon {
     // Define a fixture
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
+    
     // Parameters that affect physics
-    fd.density = 1;
-    fd.friction = 1;
-    fd.restitution = 1;
-
-     
+    fd.density = densite;
+    fd.friction = friction;
+    fd.restitution = restitution;
 
     body.createFixture(fd);
-    body.setGravityScale(0);
+    //body.setGravityScale(0);
 
-    body.setLinearVelocity(new Vec2(random(-5, 5), random(-5, -5)));
-    body.setAngularVelocity(random(-1, 1));
+    //body.setLinearVelocity(new Vec2(random(-20, 20), random(-20, -20)));
+    //body.setAngularVelocity(random(-1, 1));
   }
 }
 

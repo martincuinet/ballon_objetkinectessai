@@ -1,4 +1,10 @@
 class Barre {
+  
+  // PARAMETRES DE LA BARRE
+  float densite = 1;
+  float friction = 0;
+  float restitution = 1;
+  
   // A boundary is a simple rectangle with x,y,width,and height
   float x;
   float y;
@@ -27,9 +33,9 @@ class Barre {
     FixtureDef fd = new FixtureDef();
     fd.shape = sd;
     // Parameters that affect physics
-    fd.density = 1;
-    fd.friction = 0.3;
-    fd.restitution = 1.5;
+    fd.density = densite;
+    fd.friction = friction;
+    fd.restitution = restitution;
     // Attached the shape to the body using a Fixture
     b.createFixture(fd);
      b.setUserData(this);
@@ -37,7 +43,7 @@ class Barre {
   // Draw the boundary, if it were at an angle we'd have to do something fancier
   void display() {
     Vec2 pos = monMonde2d.getBodyPixelCoord(b);
-    fill(0);
+    fill(255);
     stroke(232,82,182);
     rectMode(PConstants.CENTER);
     pushMatrix();
